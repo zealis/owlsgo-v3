@@ -1,4 +1,7 @@
-app/data/
-app/upload/
-app/avatars/
+app/data/*
+app/upload/*
+app/avatars/*
+!app/data/.gitignore
+!app/upload/.gitignore
+!app/avatars/.gitignore
 *.sqlite
