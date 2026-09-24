@@ -102,7 +102,7 @@ function home_page(): void
     $body = tabs_html($tabLinks, $tab) . '<div class="panel thread-list">';
     $body .= $rows ? '' : '<div class="empty">暂无帖子</div>';
     foreach ($rows as $thread) {
-        $body .= thread_item_html($thread, $thread['_user'], $tab);
+        $body .= thread_item_html($thread, $thread['_user'], $tab, true);
     }
     $body .= '</div>' . paginate(route_url('home', ['tab' => $tab]), $total, $perPage, $pageNum);
 
@@ -717,7 +717,7 @@ function user_page(): void
         $rows = attach_users(all('SELECT * FROM ow_threads WHERE user_id=? ORDER BY created DESC LIMIT ' . $perPage . ' OFFSET ' . (($pageNum - 1) * $perPage), [$user['id']]));
         $body .= '<div class="panel thread-list">';
         foreach ($rows as $t) {
-            $body .= thread_item_html($t, $t['_user']);
+            $body .= thread_item_html($t, $t['_user'], 'reply', true);
         }
         $body .= ($rows ? '' : '<div class="empty">暂无帖子</div>') . '</div>' . paginate(route_url('user', ['id' => $user['id']]), $total, $perPage, $pageNum);
     } elseif ($tab === 'replies') {
@@ -733,7 +733,7 @@ function user_page(): void
         $rows = all('SELECT t.*, u.name AS author_name, u.id AS author_id FROM ow_favorites f JOIN ow_threads t ON t.id=f.thread_id LEFT JOIN ow_users u ON u.id=t.user_id WHERE f.user_id=? ORDER BY f.created DESC LIMIT ' . $perPage . ' OFFSET ' . (($pageNum - 1) * $perPage), [$user['id']]);
         $body .= '<div class="panel thread-list">';
         foreach ($rows as $t) {
-            $body .= thread_item_html($t, $t['author_id'] ? ['id' => $t['author_id'], 'name' => $t['author_name']] : null);
+            $body .= thread_item_html($t, $t['author_id'] ? ['id' => $t['author_id'], 'name' => $t['author_name']] : null, 'reply', true);
         }
         $body .= ($rows ? '' : '<div class="empty">暂无收藏</div>') . '</div>' . paginate(route_url('user', ['id' => $user['id'], 'tab' => 'favorites']), $total, $perPage, $pageNum);
     }
@@ -1002,7 +1002,7 @@ function search_page(): void
         $rows = attach_users(all("SELECT t.* FROM ow_threads t WHERE $where ORDER BY t.last_reply_at DESC LIMIT $perPage OFFSET " . (($pageNum - 1) * $perPage), [$like, $like]));
         $body .= '<div class="panel thread-list"><div class="panel-head"><strong>搜索「' . h($kw) . '」</strong><span class="muted">' . $total . ' 条结果</span></div>';
         foreach ($rows as $t) {
-            $body .= thread_item_html($t, $t['_user']);
+            $body .= thread_item_html($t, $t['_user'], 'reply', true);
         }
         $body .= ($rows ? '' : '<div class="empty">没有找到相关帖子</div>') . '</div>'
             . paginate(app_url('search?q=' . urlencode($kw)), $total, $perPage, $pageNum);

@@ -189,22 +189,41 @@ function thread_tags_html(array $thread): string
     return $tags;
 }
 
-function thread_item_html(array $thread, ?array $author, string $sort = 'reply'): string
+function thread_item_html(array $thread, ?array $author, string $sort = 'reply', bool $showForum = false): string
 {
     $forum = forum_by_id((int) $thread['forum_id']);
     $hl = $thread['highlight'] !== '' && setting('title_highlight', '1') === '1' ? ' style="color:' . h($thread['highlight']) . '"' : '';
+    // 摘要：首帖正文去 markdown 轻符号 → 纯文本单行（参考 v1 列表版式）
+    $excerpt = str_replace(["\r", "\n", "\t"], ' ', (string) ($thread['content'] ?? ''));
+    $excerpt = (string) preg_replace('/!?\[([^\]]*)\]\([^)]*\)/', '$1', $excerpt);
+    $excerpt = (string) preg_replace('/`{1,3}([^`]*)`{1,3}/', '$1', $excerpt);
+    $excerpt = (string) preg_replace('/^#+\s*|[*_~>]+/m', '', $excerpt);
+    $excerpt = cut(trim((string) preg_replace('/\s{2,}/', ' ', $excerpt)), 80);
+    // 最后评论者（有评论且记录了最后回复人时展示）
+    $lastUid = (int) ($thread['last_reply_user'] ?? 0);
+    $lastAt = (int) ($thread['last_reply_at'] ?? 0);
+    $lastHtml = '';
+    if ((int) $thread['replies'] > 0 && $lastUid > 0 && $lastAt > 0) {
+        $lastUser = one('SELECT id, name FROM ow_users WHERE id=?', [$lastUid]);
+        if ($lastUser) {
+            $lastHtml = '<span class="thread-item-last">' . user_link((int) $lastUser['id'], $lastUser['name'])
+                . '<span>' . human_time($lastAt) . '</span></span>';
+        }
+    }
     $html = '<div class="thread-item">'
-        . ($author ? avatar_link((int) $author['id'], $author['name']) : '')
+        . ($author ? avatar_link((int) $author['id'], $author['name']) : '<span class="avatar"></span>')
         . '<div class="thread-item-main">'
         . '<div class="thread-item-title"><a href="' . h(route_url('thread', ['id' => $thread['id']])) . '"' . $hl . '>' . h($thread['title']) . '</a>' . thread_tags_html($thread) . '</div>'
+        . ($excerpt !== '' ? '<div class="thread-item-excerpt">' . h($excerpt) . '</div>' : '')
         . '<div class="thread-item-meta">'
         . ($author ? user_link((int) $author['id'], $author['name']) : '<span>已注销</span>')
         . '<span>' . human_time((int) $thread['created']) . '</span>'
-        . ($forum ? '<a class="forum-tag" href="' . h(route_url('forum', ['id' => $forum['id']])) . '">' . h($forum['name']) . '</a>' : '')
+        . '<span class="thread-item-comments"><strong>' . (int) $thread['replies'] . '</strong> 评论</span>'
+        . $lastHtml
         . '</div></div>'
         . '<div class="thread-item-stats">'
-        . '<span title="评论">' . icons('message') . (int) $thread['replies'] . '</span>'
-        . '<span title="浏览">' . icons('eye') . (int) $thread['views'] . '</span>'
+        . ($showForum && $forum ? '<a class="thread-item-forum" href="' . h(route_url('forum', ['id' => $forum['id']])) . '" title="' . h($forum['name']) . '">' . h($forum['name']) . '</a>' : '')
+        . '<span class="thread-item-views"><strong>' . (int) $thread['views'] . '</strong> 浏览</span>'
         . '</div></div>';
     return $html;
 }

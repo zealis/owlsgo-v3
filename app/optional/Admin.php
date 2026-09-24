@@ -104,7 +104,7 @@ function admin_dashboard(): string
     $recent = attach_users(all('SELECT * FROM ow_threads ORDER BY created DESC LIMIT 8'));
     $html .= '<div class="panel thread-list"><div class="panel-head"><strong>最新帖子</strong></div>';
     foreach ($recent as $t) {
-        $html .= thread_item_html($t, $t['_user']);
+        $html .= thread_item_html($t, $t['_user'], 'reply', true);
     }
     $html .= '</div>';
     return $html;
