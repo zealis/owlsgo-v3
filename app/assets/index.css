@@ -56,6 +56,9 @@ html.theme-dark {
 
 /* ---------- 基础 ---------- */
 * { box-sizing: border-box; }
+/* hidden 属性必须始终生效：作者样式里的 display 会盖掉 UA 的 [hidden]{display:none}，
+   导致带 hidden 的元素（如 .reply-tip）被误显示为空块 */
+[hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; font-family: var(--font-sans); font-size: 15px; line-height: 1.75;
