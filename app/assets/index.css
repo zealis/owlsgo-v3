@@ -309,15 +309,6 @@ textarea { resize: vertical; line-height: 1.7; }
 .stat strong { display: block; font-size: 20px; color: var(--primary); }
 .stat span { font-size: 12px; color: var(--muted); }
 
-/* ---------- 版块网格 ---------- */
-.forum-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
-.forum-cell {
-  display: flex; flex-direction: column; gap: 2px; padding: 14px 18px;
-  border-bottom: 1px solid var(--border); color: var(--text);
-}
-.forum-cell:nth-child(odd) { border-right: 1px solid var(--border); }
-.forum-cell:hover { background: var(--bg-hover); text-decoration: none; }
-.forum-last { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sub-forums { padding: 10px 18px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; }
 .forum-head { align-items: flex-start; }
 
@@ -474,8 +465,6 @@ textarea { resize: vertical; line-height: 1.7; }
   .admin-nav a { white-space: nowrap; }
   .perm-grid { grid-template-columns: repeat(2, 1fr); }
   .form-grid { grid-template-columns: 1fr; }
-  .forum-grid { grid-template-columns: 1fr; }
-  .forum-cell:nth-child(odd) { border-right: 0; }
 }
 @media (max-width: 640px) {
   body { font-size: 14px; }

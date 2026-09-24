@@ -106,28 +106,6 @@ function home_page(): void
     }
     $body .= '</div>' . paginate(route_url('home', ['tab' => $tab]), $total, $perPage, $pageNum);
 
-    // 版块分组
-    $parents = forum_children(0);
-    if ($parents) {
-        $body .= '<div class="forum-groups">';
-        foreach ($parents as $parent) {
-            $children = forum_children((int) $parent['id']);
-            $body .= '<div class="panel"><div class="panel-head"><strong>' . h($parent['name']) . '</strong></div><div class="forum-grid">';
-            foreach ($children ?: [$parent] as $f) {
-                if (!$children && (int) $f['parent_id'] !== 0) {
-                    continue;
-                }
-                $last = one('SELECT id, title FROM ow_threads WHERE forum_id=? ORDER BY last_reply_at DESC, created DESC LIMIT 1', [$f['id']]);
-                $body .= '<a class="forum-cell" href="' . h(route_url('forum', ['id' => $f['id']])) . '">'
-                    . '<strong>' . h($f['name']) . '</strong>'
-                    . '<span class="muted">' . (int) $f['threads'] . ' 帖 / ' . (int) $f['posts'] . ' 评论</span>'
-                    . ($last ? '<span class="forum-last">最后：' . h(cut($last['title'], 20)) . '</span>' : '<span class="muted">暂无帖子</span>')
-                    . '</a>';
-            }
-            $body .= '</div></div>';
-        }
-        $body .= '</div>';
-    }
     page(setting('site_name'), $body, sidebar_html());
 }
 
