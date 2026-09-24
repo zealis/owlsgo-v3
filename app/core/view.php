@@ -213,7 +213,7 @@ function thread_item_html(array $thread, ?array $author, string $sort = 'reply',
     $html = '<div class="thread-item">'
         . ($author ? avatar_link((int) $author['id'], $author['name']) : '<span class="avatar"></span>')
         . '<div class="thread-item-main">'
-        . '<div class="thread-item-title"><a href="' . h(route_url('thread', ['id' => $thread['id']])) . '"' . $hl . '>' . h($thread['title']) . '</a>' . thread_tags_html($thread) . '</div>'
+        . '<div class="thread-item-title">' . thread_tags_html($thread) . '<a href="' . h(route_url('thread', ['id' => $thread['id']])) . '"' . $hl . '>' . h($thread['title']) . '</a></div>'
         . ($excerpt !== '' ? '<div class="thread-item-excerpt">' . h($excerpt) . '</div>' : '')
         . '<div class="thread-item-meta">'
         . ($author ? user_link((int) $author['id'], $author['name']) : '<span>已注销</span>')

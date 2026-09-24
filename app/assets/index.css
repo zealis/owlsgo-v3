@@ -196,11 +196,13 @@ textarea { resize: vertical; line-height: 1.7; }
 .thread-item:hover { background: var(--bg-hover); }
 .thread-item .avatar { width: 44px; height: 44px; }
 .thread-item-main { min-width: 0; }
-.thread-item-title { display: block; }
+.thread-item-title { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
 .thread-item-title a {
   color: var(--text); font-weight: 600; font-size: 15px;
   display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  flex: 1 1 auto; min-width: 0;
 }
+.thread-item-title .tag { flex: 0 0 auto; }
 .thread-item-title a:hover { color: var(--primary); }
 .thread-item-excerpt {
   font-size: 13px; color: var(--muted); margin-top: 3px;
