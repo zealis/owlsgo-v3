@@ -198,7 +198,7 @@ function thread_item_html(array $thread, ?array $author, string $sort = 'reply',
     $excerpt = (string) preg_replace('/!?\[([^\]]*)\]\([^)]*\)/', '$1', $excerpt);
     $excerpt = (string) preg_replace('/`{1,3}([^`]*)`{1,3}/', '$1', $excerpt);
     $excerpt = (string) preg_replace('/^#+\s*|[*_~>]+/m', '', $excerpt);
-    $excerpt = cut(trim((string) preg_replace('/\s{2,}/', ' ', $excerpt)), 80);
+    $excerpt = cut(trim((string) preg_replace('/\s{2,}/', ' ', $excerpt)), 18);
     // 最后评论者（有评论且记录了最后回复人时展示）
     $lastUid = (int) ($thread['last_reply_user'] ?? 0);
     $lastAt = (int) ($thread['last_reply_at'] ?? 0);
