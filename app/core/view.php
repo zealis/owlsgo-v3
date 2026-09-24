@@ -23,7 +23,7 @@ function icons(string $name): string
         'fav' => '<path d="M6 4h12v17l-6-4-6 4z"/>',
         'menu' => '<path d="M4 7h16M4 12h16M4 17h16"/>',
         'close' => '<path d="m6 6 12 12M18 6 6 18"/>',
-        'image' => '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5.5 18 5-5 3 3 2.5-2.5 3.5 3.5"/>',
+        'image' => '<rect x="4.5" y="5.5" width="15" height="13" rx="2"/><circle cx="9" cy="9.5" r="1.4"/><path d="m7.5 15.5 3-3 2.5 2.5 1.5-1.5 2.5 2.5"/>',
         'attach' => '<path d="m20 11-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8L12 4a4 4 0 0 1 5.7 5.7L9.5 18"/>',
         'sun' => '<circle cx="12" cy="12" r="4.5"/><path d="M12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M4.9 4.9 6.7 6.7M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/>',
         'moon' => '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5"/>',
