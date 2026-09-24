@@ -115,6 +115,8 @@ textarea { resize: vertical; line-height: 1.7; }
   font-size: 11px; text-align: center; padding: 0 4px; font-style: normal;
 }
 .header-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+/* 导航栏头像：比全局 .avatar(36px) 小一圈，避免撑高 header */
+.header-actions .avatar { width: 28px; height: 28px; }
 /* 复合选择器压过 .icon-btn（149 行）的 display，否则源码顺序会反过来覆盖 */
 .icon-btn.drawer-toggle { display: none; }
 
@@ -122,7 +124,7 @@ textarea { resize: vertical; line-height: 1.7; }
 .user-menu { position: relative; }
 .avatar-btn { background: none; border: 0; padding: 0; cursor: pointer; border-radius: 50%; }
 .dropdown {
-  display: none; position: absolute; right: 0; top: 44px; min-width: 170px;
+  display: none; position: absolute; right: 0; top: 36px; min-width: 170px;
   background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg); padding: 6px; z-index: 60;
 }
