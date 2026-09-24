@@ -1,0 +1,26 @@
+# owlsgo v3 — Nginx 参考配置（include 到 server {} 内使用）
+# 站点根指向本目录（index.php 在根）
+
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
+
+# 运行时目录禁止访问
+location ~ ^/app/(data|plugins|optional|core)/ {
+    deny all;
+    return 403;
+}
+
+# 静态资源缓存 7 天
+location ~* \.(css|js|svg|png|jpe?g|webp|gif|ico)$ {
+    expires 7d;
+    add_header Cache-Control "public";
+}
+
+# PHP 交给 php-fpm（按实际环境调整）
+location ~ \.php$ {
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_index index.php;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}

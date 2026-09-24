@@ -1,0 +1,24 @@
+# owlsgo v3 — Apache 配置
+Options -Indexes
+
+# 运行时目录禁止 Web 访问
+RedirectMatch 403 ^/app/(data|plugins|optional|core)/.*$
+
+# 伪静态
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+# 静态资源缓存 7 天
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType text/css "access plus 7 days"
+ExpiresByType text/javascript "access plus 7 days"
+ExpiresByType image/svg+xml "access plus 7 days"
+ExpiresByType image/png "access plus 7 days"
+ExpiresByType image/jpeg "access plus 7 days"
+ExpiresByType image/webp "access plus 7 days"
+</IfModule>

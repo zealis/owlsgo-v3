@@ -1,0 +1,4 @@
+app/data/
+app/upload/
+app/avatars/
+*.sqlite
