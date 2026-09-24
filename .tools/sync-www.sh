@@ -3,6 +3,7 @@
 # 用法：bash "D:/Project files/owlsgo/v3/.tools/sync-www.sh"
 set -u
 export PATH="/c/Users/zeali/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/c/Windows/System32:/usr/bin:/bin:$PATH"
+export MSYS_NO_PATHCONV=1
 SRC="D:\\Project files\\owlsgo\\v3"
 DST="D:\\Program Files (x86)\\phpstudy_pro\\WWW\\v3"
 
