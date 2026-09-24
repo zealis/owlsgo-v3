@@ -198,7 +198,8 @@ textarea { resize: vertical; line-height: 1.7; }
 .thread-item-main { min-width: 0; }
 .thread-item-title { display: block; }
 .thread-item-title a {
-  color: var(--text); font-weight: 600; font-size: 15px; display: inline;
+  color: var(--text); font-weight: 600; font-size: 15px;
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .thread-item-title a:hover { color: var(--primary); }
 .thread-item-excerpt {
@@ -490,13 +491,9 @@ textarea { resize: vertical; line-height: 1.7; }
   body { font-size: 14px; }
   .tab { padding: 8px 12px; }
   .thread-title { font-size: 18px; }
-  .thread-item { grid-template-columns: 38px minmax(0, 1fr); row-gap: 6px; padding: 11px 14px; }
+  .thread-item { grid-template-columns: 38px minmax(0, 1fr) auto; padding: 11px 14px; }
   .thread-item .avatar { width: 36px; height: 36px; }
-  .thread-item-stats {
-    grid-column: 2; flex-direction: row; align-items: center;
-    justify-content: flex-start; gap: 6px; font-size: 12px;
-  }
-  .thread-item-forum { width: auto; max-width: 60%; }
+  .thread-item-stats { font-size: 12px; }
   .panel.narrow { margin: 16px auto; }
   .stat-grid.wide { grid-template-columns: repeat(3, 1fr); }
   .post { padding: 12px 14px; }
