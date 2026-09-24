@@ -175,10 +175,12 @@ textarea { resize: vertical; line-height: 1.7; }
 }
 
 /* ---------- 页签 ---------- */
-.tabbar { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid var(--border); }
+/* flex-wrap：页签放不下整签换行，不强制一行；配合 .tab 的 nowrap 防文字竖排 */
+.tabbar { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid var(--border); }
 .tab {
   padding: 8px 16px; color: var(--text-2); font-size: 14px; font-weight: 600;
   border-bottom: 2px solid transparent; margin-bottom: -2px;
+  white-space: nowrap;
 }
 .tab:hover { color: var(--text); text-decoration: none; }
 .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
@@ -477,6 +479,7 @@ textarea { resize: vertical; line-height: 1.7; }
 }
 @media (max-width: 640px) {
   body { font-size: 14px; }
+  .tab { padding: 8px 12px; }
   .thread-title { font-size: 18px; }
   .thread-item { padding: 11px 14px; }
   .thread-item-stats { flex-direction: column; gap: 2px; font-size: 12px; }
