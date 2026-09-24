@@ -466,7 +466,7 @@ textarea { resize: vertical; line-height: 1.7; }
   }
   .main-nav.open { display: flex; }
   .main-nav a { padding: 10px 12px; }
-  .admin { flex-direction: column; }
+  .admin { flex-direction: column; align-items: stretch; }
   .admin-nav {
     position: static; flex: none; width: 100%;
     display: flex; overflow-x: auto; gap: 4px;
