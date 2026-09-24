@@ -252,7 +252,7 @@ function thread_new_page(): void
     $body = '<div class="panel"><div class="panel-head"><strong>发布帖子</strong></div><div class="panel-body">'
         . '<form method="post" action="' . h(route_url('thread_new')) . '">' . form_token()
         . '<div class="field"><label>版块</label><select name="forum_id" required>' . $options . '</select></div>'
-        . '<div class="field"><label>标题</label><input type="text" name="title" required maxlength="120" placeholder="一句话说清楚"></div>'
+        . '<div class="field"><label>标题</label><input type="text" name="title" required maxlength="' . max(4, (int) setting('thread_title_max', '120')) . '" placeholder="一句话说清楚"></div>'
         . '<div class="field"><label>正文</label>' . editor_widget('content', '', 'new-thread') . '</div>'
         . '<div class="form-actions"><button type="submit" class="btn btn-primary">发布</button></div></form></div></div>';
     page('发布帖子', $body, sidebar_html());
@@ -268,7 +268,9 @@ function thread_submit(): void
     check_post_interval('thread', 'thread_interval');
     $forumId = (int) post('forum_id');
     $forum = forum_by_id($forumId);
-    $title = post('title', 120);
+    $titleMax = max(4, (int) setting('thread_title_max', '120'));
+    $contentMax = max(50, (int) setting('thread_content_max', '20000'));
+    $title = post('title');
     $content = post('content');
     if (!$forum) {
         err('版块不存在');
@@ -276,8 +278,14 @@ function thread_submit(): void
     if (char_len($title) < 2) {
         err('标题至少 2 个字');
     }
+    if (char_len($title) > $titleMax) {
+        err('标题最多 ' . $titleMax . ' 个字，当前 ' . char_len($title) . ' 个字');
+    }
     if (char_len($content) < 5) {
         err('正文至少 5 个字');
+    }
+    if (char_len($content) > $contentMax) {
+        err('正文最多 ' . $contentMax . ' 个字，当前 ' . char_len($content) . ' 个字');
     }
     $needReview = setting('thread_review', '0') === '1' && !can('moderate.thread');
     $id = 0;
@@ -310,10 +318,18 @@ function topic_edit_page(): void
     }
     if (is_post()) {
         check_csrf();
-        $title = post('title', 120);
+        $titleMax = max(4, (int) setting('thread_title_max', '120'));
+        $contentMax = max(50, (int) setting('thread_content_max', '20000'));
+        $title = post('title');
         $content = post('content');
         if (char_len($title) < 2 || char_len($content) < 5) {
             err('标题或正文太短');
+        }
+        if (char_len($title) > $titleMax) {
+            err('标题最多 ' . $titleMax . ' 个字，当前 ' . char_len($title) . ' 个字');
+        }
+        if (char_len($content) > $contentMax) {
+            err('正文最多 ' . $contentMax . ' 个字，当前 ' . char_len($content) . ' 个字');
         }
         q('UPDATE ow_threads SET title=?, content=?, edited_at=? WHERE id=?', [$title, $content, now(), $thread['id']]);
         log_action('thread.edit', '编辑帖子 #' . $thread['id']);
@@ -326,7 +342,7 @@ function topic_edit_page(): void
     $body = '<div class="panel"><div class="panel-head"><strong>编辑帖子</strong></div><div class="panel-body">'
         . '<form method="post">' . form_token()
         . '<div class="field"><label>版块</label><select disabled><option>' . h(forum_by_id((int) $thread['forum_id'])['name'] ?? '') . '</option></select><p class="muted">移动版块请使用帖子的管理操作</p></div>'
-        . '<div class="field"><label>标题</label><input type="text" name="title" required maxlength="120" value="' . h($thread['title']) . '"></div>'
+        . '<div class="field"><label>标题</label><input type="text" name="title" required maxlength="' . max(4, (int) setting('thread_title_max', '120')) . '" value="' . h($thread['title']) . '"></div>'
         . '<div class="field"><label>正文</label>' . editor_widget('content', $thread['content']) . '</div>'
         . '<div class="form-actions"><button type="submit" class="btn btn-primary">保存</button> <a class="btn btn-ghost" href="' . h(route_url('thread', ['id' => $thread['id']])) . '">取消</a></div></form></div></div>';
     page('编辑帖子', $body, sidebar_html());
@@ -347,9 +363,13 @@ function reply_submit(): void
     if ((int) $thread['locked'] === 1 && !can_manage_thread($thread)) {
         err('帖子已锁定', 403);
     }
+    $replyMax = max(10, (int) setting('reply_max', '5000'));
     $content = post('content');
     if (char_len($content) < 2) {
         err('评论至少 2 个字');
+    }
+    if (char_len($content) > $replyMax) {
+        err('评论最多 ' . $replyMax . ' 个字，当前 ' . char_len($content) . ' 个字');
     }
     $parentId = (int) post('parent_id');
     $parent = $parentId > 0 ? one('SELECT * FROM ow_replies WHERE id=? AND thread_id=?', [$parentId, $thread['id']]) : null;
@@ -396,9 +416,13 @@ function reply_edit_page(): void
     }
     if (is_post()) {
         check_csrf();
+        $replyMax = max(10, (int) setting('reply_max', '5000'));
         $content = post('content');
         if (char_len($content) < 2) {
             err('评论至少 2 个字');
+        }
+        if (char_len($content) > $replyMax) {
+            err('评论最多 ' . $replyMax . ' 个字，当前 ' . char_len($content) . ' 个字');
         }
         q('UPDATE ow_replies SET content=?, edited_at=? WHERE id=?', [$content, now(), $reply['id']]);
         log_action('reply.edit', '编辑评论 #' . $reply['id']);

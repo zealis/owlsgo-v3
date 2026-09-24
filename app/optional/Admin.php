@@ -400,7 +400,7 @@ function admin_settings(): string
     $groups = [
         '基本' => ['site_name' => '站点名称', 'site_desc' => '站点描述', 'site_keywords' => '关键词', 'icp' => '备案号', 'footer_html' => '页脚 HTML', 'notice_guide' => '侧栏引导语', 'pretty_url' => '伪静态地址(1/0)'],
         '注册与登录' => ['register_open' => '开放注册(1/0)', 'register_captcha' => '注册验证码(1/0)', 'login_captcha' => '登录验证码(1/0)'],
-        '发帖与审核' => ['thread_review' => '帖子先审后显(1/0)', 'reply_review' => '评论先审后显(1/0)', 'thread_interval' => '发帖间隔(秒)', 'reply_interval' => '评论间隔(秒)'],
+        '发帖与审核' => ['thread_review' => '帖子先审后显(1/0)', 'reply_review' => '评论先审后显(1/0)', 'thread_interval' => '发帖间隔(秒)', 'reply_interval' => '评论间隔(秒)', 'thread_title_max' => '标题字数上限', 'thread_content_max' => '正文字数上限', 'reply_max' => '评论字数上限'],
         '界面' => ['title_highlight' => '标题高亮色(1/0)', 'hot_threshold' => '热门阈值', 'fold_threshold' => '长内容折叠阈值(字)', 'per_page' => '每页帖子数', 'floor_per_page' => '每页楼层数', 'home_tabs' => '首页页签(逗号)'],
         '上传' => ['upload_max_mb' => '单文件上限(MB)'],
     ];
