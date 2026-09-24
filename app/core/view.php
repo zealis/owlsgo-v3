@@ -169,16 +169,17 @@ function paginate(string $url, int $total, int $size, int $page): string
 }
 
 // ------------------------------------------------------------
-// 帖子列表项（状态标签跟在标题之后）
+// 帖子列表项（状态标记跟在标题之后）
 // ------------------------------------------------------------
 function thread_tags_html(array $thread): string
 {
     $tags = '';
+    // 置顶/精华：只显示图标（title 提供悬浮说明与可访问性）
     if ((int) $thread['pinned'] === 1) {
-        $tags .= '<span class="tag tag-pin">置顶</span>';
+        $tags .= '<span class="tag tag-pin tag-icon" title="置顶">' . icons('pin') . '</span>';
     }
     if ((int) $thread['featured'] === 1) {
-        $tags .= '<span class="tag tag-featured">精华</span>';
+        $tags .= '<span class="tag tag-featured tag-icon" title="精华">' . icons('star') . '</span>';
     }
     if ((int) $thread['locked'] === 1) {
         $tags .= '<span class="tag">锁定</span>';

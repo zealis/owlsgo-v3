@@ -240,6 +240,12 @@ textarea { resize: vertical; line-height: 1.7; }
 }
 .tag-pin { background: var(--primary-soft); color: var(--primary); }
 .tag-featured { background: var(--accent-soft); color: var(--accent); }
+/* 图标型标记（置顶/精华）：仅图标，方形居中 */
+.tag-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; padding: 0; border-radius: var(--radius-sm);
+}
+.tag-icon .icon { width: 14px; height: 14px; stroke-width: 2; }
 .tag-warn { background: var(--warn-soft); color: var(--warn); }
 .tag-danger { background: var(--danger-soft); color: var(--danger); }
 .tag-admin { background: var(--danger-soft); color: var(--danger); }
@@ -253,7 +259,7 @@ textarea { resize: vertical; line-height: 1.7; }
 
 /* ---------- 帖子详情 / 楼层 ---------- */
 .thread-panel { padding: 0; }
-.thread-title-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 18px 18px 0; }
+.thread-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 18px 18px 0; }
 .thread-title { font-size: 21px; margin: 0; }
 .thread-sub { display: flex; align-items: center; gap: 10px; padding: 6px 18px 14px; border-bottom: 1px solid var(--border); }
 .thread-sub .muted { display: inline-flex; gap: 10px; }
