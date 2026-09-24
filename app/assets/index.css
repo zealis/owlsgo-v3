@@ -115,7 +115,8 @@ textarea { resize: vertical; line-height: 1.7; }
   font-size: 11px; text-align: center; padding: 0 4px; font-style: normal;
 }
 .header-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.drawer-toggle { display: none; }
+/* 复合选择器压过 .icon-btn（149 行）的 display，否则源码顺序会反过来覆盖 */
+.icon-btn.drawer-toggle { display: none; }
 
 /* 用户菜单 */
 .user-menu { position: relative; }
@@ -454,7 +455,7 @@ textarea { resize: vertical; line-height: 1.7; }
   .stat-grid.wide { grid-template-columns: repeat(4, 1fr); }
 }
 @media (max-width: 899px) {
-  .drawer-toggle { display: inline-flex; }
+  .icon-btn.drawer-toggle { display: inline-flex; }
   .main-nav {
     display: none; position: absolute; left: 0; right: 0; top: 56px;
     background: var(--bg-panel); border-bottom: 1px solid var(--border);
