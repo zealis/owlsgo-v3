@@ -62,7 +62,7 @@ body {
   color: var(--text); background: var(--bg);
 }
 a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a:hover { text-decoration: none; }
 img { max-width: 100%; }
 code, pre { font-family: var(--font-mono); font-size: .92em; }
 code { background: var(--code-bg); border-radius: var(--radius-sm); padding: 1px 5px; }
