@@ -110,26 +110,21 @@ async function main() {
     }
     await sleep(400);
 
-    // 诊断：上传按钮 svg 的计算样式
+    // 诊断：工具栏每个子元素的几何位置（看垂直错位）
     const dbg = await send('Runtime.evaluate', {
       expression: `(function(){
-        var lb=document.querySelector('.editor-upload');
-        var svg=lb&&lb.querySelector('svg');
-        if(!svg) return 'NO_SVG';
-        var cs=getComputedStyle(svg);
-        var r=svg.getBoundingClientRect();
-        var inp=lb.querySelector('input');
-        return JSON.stringify({
-          fill: cs.fill, stroke: cs.stroke, w: r.width, h: r.height,
-          lbw: lb.getBoundingClientRect().width, lbh: lb.getBoundingClientRect().height,
-          inpDisplay: inp?getComputedStyle(inp).display:'-',
-          inpRect: inp?(function(b){return b.width+'x'+b.height;})(inp.getBoundingClientRect()):'-',
-          svgHTML: svg.outerHTML.slice(0,120)
-        });
+        var bar=document.querySelector('.editor-bar');
+        if(!bar) return 'NO_BAR';
+        return JSON.stringify(Array.from(bar.children).map(function(el){
+          var r=el.getBoundingClientRect();
+          var cs=getComputedStyle(el);
+          return {tag:el.tagName.toLowerCase(), cls:el.className, y:+r.y.toFixed(1), h:+r.height.toFixed(1),
+                  mt:cs.marginTop, mb:cs.marginBottom, aself:cs.alignSelf, va:cs.verticalAlign, disp:cs.display};
+        }));
       })()`,
       returnByValue: true,
     });
-    console.log('upload-svg:', dbg.result?.result?.value);
+    console.log('bar-children:', JSON.stringify(dbg.result?.result?.value, null, 1));
     const cookies = await send('Network.getCookies', { urls: [URL_] });
     console.log('cookies:', JSON.stringify(cookies.result?.cookies?.map((c) => c.name)));
 

@@ -340,9 +340,9 @@ textarea { resize: vertical; line-height: 1.7; }
   display: flex; align-items: center; gap: 2px; padding: 6px 8px;
   background: var(--bg-soft); border-bottom: 1px solid var(--border);
 }
-.editor-bar button, .editor-upload {
+.editor-bar button, .editor-bar .editor-upload {
   display: inline-flex; align-items: center; justify-content: center;
-  min-width: 30px; height: 30px; padding: 0 7px; border: 0; border-radius: var(--radius-sm);
+  min-width: 30px; height: 30px; padding: 0 7px; margin: 0; border: 0; border-radius: var(--radius-sm);
   background: none; color: var(--text-2); cursor: pointer; font-size: 13px;
 }
 .editor-bar button:hover, .editor-upload:hover { background: var(--bg-hover); color: var(--text); }
