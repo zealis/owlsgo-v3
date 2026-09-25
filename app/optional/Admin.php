@@ -305,7 +305,7 @@ function admin_notices(): string
     $html = '<div class="panel"><div class="panel-head"><strong>' . ($edit ? '编辑公告' : '发布公告') . '</strong></div><div class="panel-body">'
         . '<form method="post">' . form_token() . '<input type="hidden" name="do" value="save_notice"><input type="hidden" name="id" value="' . (int) ($edit['id'] ?? 0) . '">'
         . '<div class="field"><label>标题</label><input type="text" name="title" required maxlength="120" value="' . h($edit['title'] ?? '') . '"></div>'
-        . '<div class="field"><label>内容</label>' . editor_widget('content', $edit['content'] ?? '') . '</div>'
+        . '<div class="field"><label>内容</label>' . editor_widget('content', $edit['content'] ?? '', 'notice-' . (int) ($edit['id'] ?? 0)) . '</div>'
         . '<div class="field check"><label><input type="checkbox" name="pushed" value="1"' . ($edit && (int) $edit['pushed'] === 1 ? ' checked' : '') . '> 推送到侧栏公告位</label></div>'
         . '<div class="form-actions"><button type="submit" class="btn btn-primary">保存</button></div></form></div></div>';
     $rows = all('SELECT n.*, u.name AS author_name FROM ow_notices n LEFT JOIN ow_users u ON u.id=n.user_id ORDER BY n.created DESC LIMIT 50');
@@ -638,6 +638,7 @@ function admin_handle_post(string $tab): void
                 [uid(), post('title', 120), post('content'), $pushed, now()]);
         }
         log_action('notice.save', '保存公告「' . post('title', 40) . '」');
+        set_draft_clear('notice-' . $id);
         go(route_url('admin', ['tab' => 'notices']));
     }
     if ($do === 'delete_notice') {

@@ -136,6 +136,12 @@ function take_flash(): string
     return $m;
 }
 
+// 一次性表单提交成功标记（跳转后由 editor_widget 消费，清掉对应编辑器的本地草稿）
+function set_draft_clear(string $key): void
+{
+    $_SESSION['draft_clear'] = $key;
+}
+
 // ------------------------------------------------------------
 // 站点设置：ow_settings 是唯一取值来源，default_settings() 兜底
 // ------------------------------------------------------------

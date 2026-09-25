@@ -144,6 +144,14 @@
     var area = editor.querySelector('[data-editor-area]');
     var key = draftKey(editor);
     var i;
+    // 提交成功跳转回来：清掉本地草稿与本框内容（服务端一次性标记）
+    if (editor.getAttribute('data-draft-clear')) {
+      try {
+        window.localStorage.removeItem(key);
+        window.sessionStorage.setItem(key + '-done', '1');
+      } catch (e) {}
+      area.value = '';
+    }
     // 草稿恢复（已提交标记优先）
     try {
       if (!area.value && !window.sessionStorage.getItem(key + '-done')) {

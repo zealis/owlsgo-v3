@@ -373,7 +373,13 @@ function sidebar_html(): string
 // ------------------------------------------------------------
 function editor_widget(string $name, string $value = '', string $draftKey = ''): string
 {
-    $html = '<div class="editor" data-editor data-draft-key="' . h($draftKey) . '">'
+    // 提交成功后跳转回来时输出一次性清稿标记（JS 依此清除本地草稿，避免内容残留）
+    $clearAttr = '';
+    if (($_SESSION['draft_clear'] ?? null) !== null && (string) $_SESSION['draft_clear'] === $draftKey) {
+        $clearAttr = ' data-draft-clear="1"';
+        unset($_SESSION['draft_clear']);
+    }
+    $html = '<div class="editor" data-editor data-draft-key="' . h($draftKey) . '"' . $clearAttr . '>'
         . '<div class="editor-bar">'
         . '<button type="button" data-md="**粗体**" title="粗体"><strong>B</strong></button>'
         . '<button type="button" data-md="*斜体*" title="斜体"><em>I</em></button>'

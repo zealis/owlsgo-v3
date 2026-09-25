@@ -306,6 +306,7 @@ function thread_submit(): void
     if ($needReview) {
         set_flash('帖子已提交，待审核后公开显示');
     }
+    set_draft_clear('new-thread');
     go(route_url('thread', ['id' => $id]));
 }
 
@@ -333,6 +334,7 @@ function topic_edit_page(): void
         }
         q('UPDATE ow_threads SET title=?, content=?, edited_at=? WHERE id=?', [$title, $content, now(), $thread['id']]);
         log_action('thread.edit', '编辑帖子 #' . $thread['id']);
+        set_draft_clear('edit-thread-' . (int) $thread['id']);
         go(route_url('thread', ['id' => $thread['id']]));
     }
     $options = '';
@@ -343,7 +345,7 @@ function topic_edit_page(): void
         . '<form method="post">' . form_token()
         . '<div class="field"><label>版块</label><select disabled><option>' . h(forum_by_id((int) $thread['forum_id'])['name'] ?? '') . '</option></select><p class="muted">移动版块请使用帖子的管理操作</p></div>'
         . '<div class="field"><label>标题</label><input type="text" name="title" required maxlength="' . max(4, (int) setting('thread_title_max', '120')) . '" value="' . h($thread['title']) . '"></div>'
-        . '<div class="field"><label>正文</label>' . editor_widget('content', $thread['content']) . '</div>'
+        . '<div class="field"><label>正文</label>' . editor_widget('content', $thread['content'], 'edit-thread-' . (int) $thread['id']) . '</div>'
         . '<div class="form-actions"><button type="submit" class="btn btn-primary">保存</button> <a class="btn btn-ghost" href="' . h(route_url('thread', ['id' => $thread['id']])) . '">取消</a></div></form></div></div>';
     page('编辑帖子', $body, sidebar_html());
 }
@@ -404,6 +406,8 @@ function reply_submit(): void
     if (is_ajax()) {
         json_out(['ok' => true, 'redirect' => route_url('thread', ['id' => $thread['id']]) . '#p' . $id]);
     }
+    // 非 AJAX 回退路径同样清掉评论框草稿（AJAX 路径由 JS clearDraft 处理）
+    set_draft_clear('reply-' . (int) $thread['id']);
     go(route_url('thread', ['id' => $thread['id']]) . '#p' . $id);
 }
 
@@ -426,11 +430,12 @@ function reply_edit_page(): void
         }
         q('UPDATE ow_replies SET content=?, edited_at=? WHERE id=?', [$content, now(), $reply['id']]);
         log_action('reply.edit', '编辑评论 #' . $reply['id']);
+        set_draft_clear('edit-reply-' . (int) $reply['id']);
         go(route_url('thread', ['id' => $reply['thread_id']]) . '#p' . $reply['id']);
     }
     $body = '<div class="panel"><div class="panel-head"><strong>编辑评论</strong></div><div class="panel-body">'
         . '<form method="post">' . form_token()
-        . editor_widget('content', $reply['content'])
+        . editor_widget('content', $reply['content'], 'edit-reply-' . (int) $reply['id'])
         . '<div class="form-actions"><button type="submit" class="btn btn-primary">保存</button> <a class="btn btn-ghost" href="' . h(route_url('thread', ['id' => $reply['thread_id']])) . '">取消</a></div></form></div></div>';
     page('编辑评论', $body, sidebar_html());
 }
