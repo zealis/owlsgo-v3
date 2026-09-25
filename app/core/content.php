@@ -22,6 +22,39 @@ function image_ext_allowed(string $url): bool
     return (bool) preg_match('/\.(png|jpe?g|gif|webp|svg|bmp|avif)$/i', $path);
 }
 
+// 站内图片附件：URL 由 attachment_url() 生成，形如 /index.php?a=attachment&id=N
+// 或 /attachment/N —— 没有扩展名，无法靠后缀判断，改查库按真实 mime 认定。
+// 外链不享受此豁免，避免借 a=attachment 形态把外部资源渲染成 <img>。
+function is_local_image_attachment(string $url): bool
+{
+    static $cache = [];
+    // 比对 host 时剥离端口：parse_url 的 host 不含端口，而 HTTP_HOST 含
+    $host = strtolower((string) (parse_url($url, PHP_URL_HOST) ?: ''));
+    $raw = (string) ($_SERVER['HTTP_HOST'] ?? '');
+    $self = strtolower((string) (parse_url($raw === '' ? '' : 'http://' . $raw, PHP_URL_HOST) ?: ''));
+    if ($host !== '' && $host !== $self) {
+        return false;
+    }
+    $path = (string) (parse_url($url, PHP_URL_PATH) ?: '');
+    $query = (string) (parse_url($url, PHP_URL_QUERY) ?: '');
+    $id = 0;
+    if (preg_match('#(?:^|/)index\.php$#i', $path)
+        && preg_match('#(?:^|&)a=attachment(?:&|$)#i', $query)
+        && preg_match('#(?:^|&)id=(\d+)#i', $query, $m)) {
+        $id = (int) $m[1];
+    } elseif (preg_match('#/attachment/(\d+)#i', $path, $m)) {
+        $id = (int) $m[1];
+    }
+    if ($id <= 0) {
+        return false;
+    }
+    if (!array_key_exists($id, $cache)) {
+        $att = one('SELECT mime FROM ow_attachments WHERE id=?', [$id]);
+        $cache[$id] = !empty($att) && str_starts_with((string) ($att['mime'] ?? ''), 'image/');
+    }
+    return $cache[$id];
+}
+
 // 行内语法（输入已是转义后的文本）
 function inline_html(string $escaped): string
 {
@@ -34,7 +67,7 @@ function inline_html(string $escaped): string
     // 图片 ![alt](url)
     $escaped = preg_replace_callback('/!\[([^\]]*)\]\(([^)\s]+)\)/', function ($m) {
         $url = safe_url(html_entity_decode($m[2], ENT_QUOTES, 'UTF-8'));
-        if ($url === '' || !image_ext_allowed($url)) {
+        if ($url === '' || !(image_ext_allowed($url) || is_local_image_attachment($url))) {
             return $m[0];
         }
         return '<img class="content-image" src="' . h($url) . '" alt="' . $m[1] . '" loading="lazy">';
